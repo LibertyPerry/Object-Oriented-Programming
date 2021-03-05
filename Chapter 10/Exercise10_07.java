@@ -79,7 +79,7 @@ class Account {
 		this.id = id;
 	}
 	public void setBalance(double balance) {
-		this.balance = id;
+		this.balance = balance;
 	}
 	public void setAnnualInterestRate(double annualInterestRate) {
 		this.annualInterestRate = annualInterestRate;
