@@ -1,95 +1,213 @@
+import java.util.Scanner;
 
-public class Exercise13_11 {
+public class Cake_Shop {
 	public static void main(String[] args) {
-		Octagon octagon1 = new Octagon(8, "white", true);
-		Octagon octagon2 = (Octagon)octagon1.clone();
-		System.out.println("Octagon Area: " + octagon1.getArea());
-		System.out.println("Perimeter: " + octagon1.getPerimeter());
+		Scanner input = new Scanner(System.in);
+		System.out.println("Welcome to the Cake Shop");
+		System.out.print("Enter name for order: ");
+		String name = input.next();
+		double shape = 0;
+		while (shape != 1 && shape != 2){
+			System.out.print("Would you like a Round or a Rectangle cake? \n"
+					+ "(1 Round, 2 Rectangle) :" );
+			shape = input.nextDouble();
+			if (shape != 1 && shape != 2) {
+				System.out.println("INCORECT VALUE");
+			}
+		}
+		if (shape == 1) {
+			System.out.println("Round Cake Selected");
+		}else if (shape == 2) {
+			System.out.print("Rectangle Cake Selected");
+		}
+		double Volume = 0;
+		double Circumference = 0;
+		double SurfaceArea = 0;
+		double Total_Price = 0;
+		double Base_Price = 0;
+		double Fondant_Price = 0;
+		System.out.println();
+		System.out.print("How many tiers of cake do you want? ");
+		int tiers = input.nextInt();
+		String[] Flavors = new String[tiers];
+		String[] Icing = new String[tiers];
+		// Creating the tiers of cake and adding the prices of each to the total price
+		for(int x = 0; tiers > x; x++) {
+			System.out.print("Layer " + (x+1) + " Flavor: ");
+			String flavor = input.next(); 
+			Flavors[x] = flavor;
+			
+			if (shape == 1) {
+				System.out.print("Enter cake demensions\n"
+				+ "Diameter: ");
+				double diameter = input.nextDouble();
+				double radius = diameter / 2;
+				System.out.print("Height: ");
+				double height = input.nextDouble();
+				Cylinder cake = new Cylinder(radius, height);
+				Volume = cake.getVolume();
+				Circumference = cake.getCircumference();
+				SurfaceArea = cake.getSurfaceArea();
+					Base_Price = Volume / 4;
+					if(Base_Price < 12) {
+						Base_Price = 12;
+					}
+					Total_Price += Base_Price;
+			}else if(shape == 2) {
+				System.out.print("Enter cake demesion\n"
+					+ "Length: ");
+				double length = input.nextDouble();
+				System.out.print("Width: ");
+				double width = input.nextDouble();
+				System.out.print("Height: ");
+				double height = input.nextDouble();
+				Rectangle_Prism cake = new Rectangle_Prism(length, width, height);
+				Volume = cake.getVolume();
+				Circumference = cake.getCircumference();
+				SurfaceArea = cake.getSurfaceArea();
+					Base_Price = Volume / 6;
+					if (Base_Price < 15.00) {
+						Base_Price = 15;
+					}
+					Total_Price += Base_Price;
+			}
+			
+			double icing_type = 0;
+			while (icing_type != 1 && icing_type != 2){
+			System.out.print("Do you want Butter Cream Icing or Fondant?\n"
+					+ "(Foundant costs extra)\n"
+					+ "1) Butter Cream, 2)Foundant");
+			icing_type = input.nextInt();
+			if (icing_type != 1 && icing_type != 2) {
+				System.out.println("INCORECT VALUE");
+				}
+			}
+			if (icing_type == 2) {
+				Fondant_Price = SurfaceArea * 0.1;
+				Total_Price += Fondant_Price;
+			}
+			System.out.print("Layer " + (x+1) + " Icing color: ");
+			String icing = input.next(); 
+			Icing[x] = icing;
+			System.out.println("Tier Created");
+			System.out.println();
+		}
 		
-		System.out.println("Compare octagons:" + octagon1.compareTo(octagon2));
+		System.out.println("Cake Summary:");
+		for (int x = 0; x < tiers; x++) {
+			System.out.println("Teir " + (x+1) + " Flavor: " + Flavors[x] + ", Icing: " + Icing[x]);
+		}
+		System.out.println("Order Total for " + name + " is: " + Total_Price);
+	
 	}
+		
 }
 
-abstract class GeometricObject{
-	private String color = "None";
-	private boolean filled;
-	private java.util.Date dateCreated;
+
+abstract class Cake {
+	private String flavor = " ";
+	private String icing = " ";
 	
-	protected GeometricObject() {
-		dateCreated = new java.util.Date();
+	public Cake() {	
 	}
-	protected GeometricObject(String color, boolean filled) {
+	public Cake(String flavor, String icing) {
 		this();
-		this.color = color;
-		this.filled = filled;
+		this.flavor = flavor;
+		this.icing = icing;
 	}
-	public String getColor() {
-		return color; 
+	public String getFlavor() {
+		return flavor;
 	}
-	public void setColor(String color) {
-		this.color = color;
+	public String getIcing() {
+		return icing;
 	}
-	public boolean isFilled() {
-		return filled;
-	}
-	public void setFilled(boolean filled) {
-		this.filled = filled;	
-	}
-	public String getDateCreated() {
-		return this.dateCreated.toString();
-	}
-	public String toString() {
-		return "Created on " + dateCreated;
-	}
-	public abstract double getArea();	
-	public abstract double getPerimeter();	
+	public abstract double getVolume();
+	public abstract double getSurfaceArea();
+	public abstract double getCircumference();
 }
-class Octagon extends GeometricObject implements Cloneable, Comparable<Octagon> {
-	private double side = 1.0;
+class Cylinder extends Cake {
+	private double radius; 
+	private double height;
+
+	public Cylinder() {
+	}
+	public Cylinder(double radius, double height) {
+		this.radius = radius;
+		this.height = height;
+	}
+	public double getRadius() {
+		return radius;
+	}
+	public double getHeight() {
+		return height;
+	}
+	public void setRadius() {
+		radius = radius;
+	}
+	public void setHeight() {
+		height = height;
+	}
+	public double getVolume() {
+		double base = Math.PI * (radius * radius);
+		double volume = base * height;
+		return volume;
+	}
+	public double getCircumference() {
+		double Circumference = 2 * Math.PI * radius;
+		return Circumference;
+	}
+	public double getSurfaceArea() {
+		double SurfaceArea = (2 * Math.PI * radius * height) +(Math.PI * radius * radius);
+		return SurfaceArea;
+	}
+}
+class Rectangle_Prism extends Cake {
+	private double length;
+	private double width;
+	private double height;
 	
-	public Octagon() {
+	public Rectangle_Prism() {
 	}
-	public Octagon(double side) {
-		this.side = side;
+	public Rectangle_Prism(double length, double width, double height) {
+		this.length = length;
+		this.width = width; 
+		this.height = height;
 	}
-	public Octagon(double side, String color, boolean filled) {
-		this.side = side;
-		setColor(color);
-		setFilled(filled);
+	public double getLength() {
+		return length;
 	}
-	public double getSide() {
-		return side;
+	public double getWidth() {
+		return width;
 	}
-	public void setSide(double side) {
-		this.side = side;
+	public double getHeight() {
+		return height;
 	}
-	public double getArea() {
-		double s = 2 + (4 / Math.sqrt(2.0));
-		double Area = s * side * side;
-		return Area;
+	public void setLength() {
+		length = length;
 	}
-	public double getPerimeter() {
-		double Perimeter = side * 8;
-		return Perimeter;
+	public void setWidth() {
+		width = width;
+	}
+	public void setHeight() {
+		height = height;
+	}
+	public double getVolume() {
+		double volume = length * width * height;
+		return volume;
+	}
+	public double getCircumference() {
+		double Circumference = (length * 2) + (width * 2);
+		return Circumference;
+	}
+	public double getSurfaceArea() {
+		double SurfaceArea = (length * width) + (height * length * 2) + (height * width * 2);
+		return SurfaceArea;
 		
 	}
-	public Object clone() {
-		try {
-			return super.clone();
-		}
-		catch (CloneNotSupportedException ex) {
-			return null;
-		}
-	}
-	public int compareTo(Octagon o) {
-		if (side > o.side) {
-			return 1;
-		}else if (side < o.side){
-			return -1;
-		}else {
-			return 0;	
-		}
-		
-	}
+}
+class Decorations {
+	
+}
+class Price {
 	
 }
